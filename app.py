@@ -6,27 +6,19 @@ import joblib
 import pandas as pd
 from folium.plugins import MarkerCluster
 import gzip
-
-# =====================
-# CARGA DE DATOS Y MODELOS
-# =====================
-
 # Cargar modelo binario desde archivo comprimido
 with gzip.open("modelo_binario_comprimido.pkl.gz", "rb") as f:
     modelo_bin = joblib.load(f)
-
 # Cargar modelos restantes
 modelo_tipo = joblib.load("modelo_tipo_crimen.pkl")
 clases_tipo = joblib.load("clases_tipo_crimen.pkl")
-
 # Leer CSV comprimido con separador explícito
 try:
-    with gzip.open("CRIME_BOSTON.comprimido.csv.gz", "rt", encoding="latin1") as f:
-        data = pd.read_csv(f, sep=",", engine="python")
+    with gzip.open("CRIME_BOSTON.comprimido.csv.gz", "rt", encoding="latin1", errors="ignore") as f:
+        data = pd.read_csv(f, sep=None, engine="python", on_bad_lines="skip")
 except Exception as e:
     st.error(f"❌ Error al leer el archivo CSV: {e}")
     st.stop()
-
 # Mostrar columnas para debug
 st.write("Columnas detectadas en el archivo CSV:")
 st.write(data.columns.tolist())
@@ -38,7 +30,6 @@ if "Lat" not in data.columns or "Long" not in data.columns:
 
 # Eliminar registros sin coordenadas
 data = data.dropna(subset=["Lat", "Long"])
-
 # =====================
 # INTERFAZ DE LA APP
 # =====================
