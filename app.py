@@ -14,9 +14,9 @@ with gzip.open("modelo_binario_comprimido.pkl.gz", "rb") as f:
 modelo_tipo = joblib.load("modelo_tipo_crimen.pkl")
 clases_tipo = joblib.load("clases_tipo_crimen.pkl")
 
-# Leer CSV comprimido de forma robusta
+# Leer CSV comprimido
 with gzip.open("CRIME_BOSTON.comprimido.csv.gz", "rt", encoding="latin1") as f:
-    data = pd.read_csv(f, sep=",", encoding="latin1", error_bad_lines=False, engine="python")
+    data = pd.read_csv(f, sep=",", encoding="latin1", on_bad_lines="skip", engine="python")
 
 data = data.dropna(subset=["Lat", "Long"])
 
@@ -99,3 +99,4 @@ if output.get("last_clicked"):
 
     st.markdown(f"🔍 **{prob_text}**")
     st_folium(m, height=500, width=700)
+
