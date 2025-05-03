@@ -13,7 +13,11 @@ with gzip.open("modelo_binario_comprimido.pkl.gz", "rb") as f:
 
 modelo_tipo = joblib.load("modelo_tipo_crimen.pkl")
 clases_tipo = joblib.load("clases_tipo_crimen.pkl")
-data = pd.read_csv("CRIME_BOSTON.csv", encoding="latin1")
+
+# Leer CSV comprimido
+with gzip.open("CRIME_BOSTON.comprimido.csv.gz", "rt", encoding="latin1") as f:
+    data = pd.read_csv(f)
+
 data = data.dropna(subset=["Lat", "Long"])
 
 # Configuración de la app
@@ -88,7 +92,7 @@ if output.get("last_clicked"):
                 color="red",
                 fill=True,
                 fill_opacity=0.5,
-                popup=row["OFFENSE_CODE_GROUP"] if "OFFENSE_CODE_GROUP" in row else "Crimen"
+                popup=row.get("OFFENSE_CODE_GROUP", "Crimen")
             ).add_to(cluster)
     else:
         st.success("✅ Zona con baja probabilidad de crimen.")
