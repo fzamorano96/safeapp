@@ -14,9 +14,9 @@ with gzip.open("modelo_binario_comprimido.pkl.gz", "rb") as f:
 modelo_tipo = joblib.load("modelo_tipo_crimen.pkl")
 clases_tipo = joblib.load("clases_tipo_crimen.pkl")
 
-# Leer CSV comprimido
+# Leer CSV comprimido de forma robusta
 with gzip.open("CRIME_BOSTON.comprimido.csv.gz", "rt", encoding="latin1") as f:
-    data = pd.read_csv(f)
+    data = pd.read_csv(f, sep=",", encoding="latin1", error_bad_lines=False, engine="python")
 
 data = data.dropna(subset=["Lat", "Long"])
 
