@@ -1,4 +1,3 @@
-
 import streamlit as st
 import folium
 from streamlit_folium import st_folium
@@ -6,13 +5,18 @@ import numpy as np
 import joblib
 import pandas as pd
 from folium.plugins import MarkerCluster
+import gzip
 
 # Cargar modelos y datos
-modelo_bin = joblib.load("modelo_binario.pkl")
+with gzip.open("modelo_binario_comprimido.pkl.gz", "rb") as f:
+    modelo_bin = joblib.load(f)
+
 modelo_tipo = joblib.load("modelo_tipo_crimen.pkl")
 clases_tipo = joblib.load("clases_tipo_crimen.pkl")
 data = pd.read_csv("CRIME_BOSTON.csv", encoding="latin1")
 data = data.dropna(subset=["Lat", "Long"])
+
+# Configuración de la app
 st.set_page_config(page_title="SafePath - Mapa de Crimen", layout="centered")
 st.title("🗺️ SafePath: Predicción de Crimen por Ubicación")
 st.markdown("Haz clic en el mapa para ver si una zona tiene alta probabilidad de crimen.")
